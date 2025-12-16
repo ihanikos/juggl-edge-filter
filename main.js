@@ -164,8 +164,11 @@ module.exports = class JugglEdgeFilterPlugin extends Plugin {
                 });
             }
 
-            // After filtering edges, hide isolated nodes if enabled
+            // After filtering edges, update node visibility based on hideIsolated setting
             if (this.settings.hideIsolated) {
+                // First show all nodes, then hide the isolated ones
+                // This ensures previously hidden nodes that now have edges are shown
+                cy.nodes().show();
                 cy.nodes().filter(node => {
                     // Count visible connected edges
                     const visibleEdges = node.connectedEdges().filter(edge => edge.visible());
