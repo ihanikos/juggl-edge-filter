@@ -6,9 +6,11 @@ An Obsidian plugin that allows you to filter edges (relationships) in Juggl grap
 
 - **Whitelist Mode**: Show only specific edge types, hiding all others
 - **Blacklist Mode**: Hide specific edge types, showing all others
-- **Quick Commands**: Filter edges without opening settings
+- **Hide Isolated Nodes**: Automatically hide nodes with no visible connections
+- **Quick Commands**: Filter edges and nodes without opening settings
 - **Universal**: Works with any relationship field names in your vault
 - **Real-time**: Changes apply immediately to all open Juggl graphs
+- **Smart Integration**: When hiding isolated nodes + filtering edges, nodes left with no visible edges are automatically hidden
 
 ## Requirements
 
@@ -27,11 +29,18 @@ An Obsidian plugin that allows you to filter edges (relationships) in Juggl grap
 
 Open the command palette (Ctrl/Cmd + P) and use:
 
+**Edge Filtering:**
 - **Show only specific edge types**: Enter edge types to display (whitelist mode)
 - **Hide specific edge types**: Enter edge types to hide (blacklist mode)
-- **Show all edges**: Clear all filters
+- **Show all edges**: Clear edge filters
 
-When prompted, enter relationship types separated by commas (e.g., `parent, child, sibling`).
+**Node Filtering:**
+- **Hide isolated nodes (no connections)**: Hide nodes with no visible edges
+- **Show all nodes**: Show all nodes again
+
+When prompted for edge types, enter relationship types separated by commas (e.g., `parent, child, sibling`).
+
+**Note**: The "Hide isolated nodes" feature works intelligently with edge filtering. When both are active, nodes that lose all their visible edges due to filtering are automatically hidden.
 
 ### Settings
 
@@ -54,19 +63,26 @@ This approach is more reliable than CSS-based filtering and works consistently a
 ## Examples
 
 ### Show only parent relationships
-Command: "Show only specific edge types" → Enter: `parent`
+1. Command: "Show only specific edge types" → Enter: `parent`
 
 Result: Only edges with `type="parent"` are visible
 
 ### Hide sibling and friend relationships
-Command: "Hide specific edge types" → Enter: `sibling, friend`
+1. Command: "Hide specific edge types" → Enter: `sibling, friend`
 
 Result: All edges except those with `type="sibling"` or `type="friend"` are visible
 
-### Clear all filters
-Command: "Show all edges"
+### Show only child relationships and hide isolated nodes
+1. Command: "Show only specific edge types" → Enter: `child`
+2. Command: "Hide isolated nodes (no connections)"
 
-Result: All relationship types are visible
+Result: Only "child" edges are shown, and any nodes left with no visible edges are automatically hidden
+
+### Clear all filters
+1. Command: "Show all edges"
+2. Command: "Show all nodes"
+
+Result: All relationship types and nodes are visible
 
 ## Technical Details
 

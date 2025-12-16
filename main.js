@@ -3,7 +3,8 @@ const { Plugin, PluginSettingTab, Setting, Notice, Modal } = require('obsidian')
 const DEFAULT_SETTINGS = {
     mode: 'blacklist',
     edgeTypes: '',
-    filterEnabled: false
+    filterEnabled: false,
+    hideIsolated: false
 };
 
 module.exports = class JugglEdgeFilterPlugin extends Plugin {
@@ -48,6 +49,26 @@ module.exports = class JugglEdgeFilterPlugin extends Plugin {
                     await this.saveSettings();
                     new Notice(`Hiding: ${input}`);
                 }
+            }
+        });
+
+        this.addCommand({
+            id: 'hide-isolated-nodes',
+            name: 'Hide isolated nodes (no connections)',
+            callback: async () => {
+                this.settings.hideIsolated = true;
+                await this.saveSettings();
+                new Notice('Hiding isolated nodes');
+            }
+        });
+
+        this.addCommand({
+            id: 'show-all-nodes',
+            name: 'Show all nodes',
+            callback: async () => {
+                this.settings.hideIsolated = false;
+                await this.saveSettings();
+                new Notice('Showing all nodes');
             }
         });
 
@@ -142,17 +163,30 @@ module.exports = class JugglEdgeFilterPlugin extends Plugin {
                     cy.edges(`[type="${type}"]`).hide();
                 });
             }
+
+            // After filtering edges, hide isolated nodes if enabled
+            if (this.settings.hideIsolated) {
+                cy.nodes().filter(node => {
+                    // Count visible connected edges
+                    const visibleEdges = node.connectedEdges().filter(edge => edge.visible());
+                    return visibleEdges.length === 0;
+                }).hide();
+            } else {
+                // Show all nodes if hideIsolated is disabled
+                cy.nodes().show();
+            }
         });
     }
 
     async onunload() {
-        // Show all edges when plugin is disabled
+        // Show all edges and nodes when plugin is disabled
         const jugglPlugin = this.getJugglPlugin();
         if (jugglPlugin && jugglPlugin.activeGraphs) {
             const activeGraphs = jugglPlugin.activeGraphs();
             activeGraphs.forEach(graph => {
-                if (graph.viz) {
+                if (graph && graph.viz) {
                     graph.viz.edges().show();
+                    graph.viz.nodes().show();
                 }
             });
         }
