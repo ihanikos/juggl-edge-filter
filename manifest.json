@@ -1,0 +1,9 @@
+{
+  "id": "juggl-edge-filter",
+  "name": "Juggl Edge Filter",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Filter edge types in Juggl graphs by showing or hiding specific relationship types",
+  "author": "Custom Plugin",
+  "isDesktopOnly": false
+}
